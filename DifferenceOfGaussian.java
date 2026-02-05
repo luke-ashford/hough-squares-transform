@@ -29,11 +29,11 @@ public class DifferenceOfGaussian {
 				
 				// Subtract To Find The Difference
 				int sum = (int) - (sigma1Sum - sigma2Sum);
-				min = sum < min ? sum : min;
-				max = sum > max ? sum : max;
+				min = Math.min(sum, min);
+				max = Math.max(sum, max);
 									
-				min = min > 0 ? min : 0;
-				output.pixels[x+indexCutoff][y+indexCutoff] = sum > 0 ? sum : 0;
+				min = Math.max(min, 0);
+				output.pixels[x+indexCutoff][y+indexCutoff] = Math.max(sum, 0);
 			}
 		}
 		
@@ -50,10 +50,10 @@ public class DifferenceOfGaussian {
 	
 	static double[][] generateKernel(int size, int sigma) {
 		double[][] kernel = new double[size][size];
-		double maxIndex = (double) ((size - 1) / 2);
+		double maxIndex = (size - 1) / 2.;
 		
 		double twoSigmaSquared = 2 * sigma * sigma;
-		double oneOverTwoPiSigmaSquared = 1. / (double) (Math.PI * twoSigmaSquared);
+		double oneOverTwoPiSigmaSquared = 1. / (Math.PI * twoSigmaSquared);
 		double denominatorialExp = - ((maxIndex*maxIndex + maxIndex*maxIndex) / twoSigmaSquared);
 		double denominator = oneOverTwoPiSigmaSquared * Math.exp(denominatorialExp);
 		

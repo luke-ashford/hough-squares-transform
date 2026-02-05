@@ -34,8 +34,8 @@ public class Sobel {
 				}
 				
 				int sum = (int) (Math.abs(xSum) + Math.abs(ySum));
-				min = sum < min ? sum : min;
-				max = sum > max ? sum : max;
+				min = Math.min(sum, min);
+				max = Math.max(sum, max);
 				
 				output.pixels[x+1][y+1] = sum;
 			}

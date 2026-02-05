@@ -29,25 +29,25 @@ public class TwoDHoughSpace {
 						int iX = (int) thetaDeg;
 						int iY = (int) Math.floor(rho + halfDiag);
 						
-						accumulator[iX][iY] += 1 * dogInput.pixels[x][y];
+						accumulator[iX][iY] += dogInput.pixels[x][y];
 						
-						accumulatorMax = accumulatorMax < accumulator[iX][iY] ? accumulator[iX][iY] : accumulatorMax;
+						accumulatorMax = Math.max(accumulatorMax, accumulator[iX][iY]);
 					}
 				}
 			}
 		}
 		
-		outputAccumulator(accumulator, accumulatorMax, input.depth, 180, accYSize);
-		findPeaks(input, accumulator, accumulatorMax, f1, 180, accYSize);
+		outputAccumulator(accumulator, accumulatorMax, input.depth, accYSize);
+		findPeaks(input, accumulator, accumulatorMax, f1, accYSize);
 		
 		return accumulator;
 	}
 	
-	static void outputAccumulator(int[][] accumulator, int accumulatorMax, int depth, int width, int height) {
-		Image output = new Image(depth, height, width);
+	static void outputAccumulator(int[][] accumulator, int accumulatorMax, int depth, int width) {
+		Image output = new Image(depth, width, 180);
 		
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+		for (int x = 0; x < 180; x++) {
+			for (int y = 0; y < width; y++) {
 				output.pixels[y][x] = (int) (((double) accumulator[x][y] / accumulatorMax) * 255);
 			}
 		}
@@ -55,19 +55,17 @@ public class TwoDHoughSpace {
 		output.WritePGM("accumulator.pgm");
 	}
 	
-	static void findPeaks(Image input, int[][] accumulator, int accumulatorMax, double f1, int width, int height) {
-		int[][] peaks = new int[width][height];
+	static void findPeaks(Image input, int[][] accumulator, int accumulatorMax, double f1, int height) {
+		int[][] peaks = new int[180][height];
 		ImagePPM output = new ImagePPM(input.depth, input.width, input.height);
 		
 		for (int n = 0; n < 3; n++) {
 			for (int x = 0; x < input.width; x++) {
-				for (int y = 0; y < input.height; y++) {
-					output.pixels[n][x][y] = input.pixels[x][y];
-				}
+                if (input.height >= 0) System.arraycopy(input.pixels[x], 0, output.pixels[n][x], 0, input.height);
 			}
 		}
 		
-		for (int x = 0; x < width - 18; x++) {
+		for (int x = 0; x < 162; x++) {
 			for (int y = 0; y < height - 18; y++) {
 				int currentMax = 0;
 				int maxX = 0;
