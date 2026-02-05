@@ -3,3 +3,6 @@ testing
 .idea
 
 *.class
+
+*.pgm
+*.ppm
